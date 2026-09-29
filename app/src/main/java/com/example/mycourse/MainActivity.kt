@@ -3,31 +3,35 @@ package com.example.mycourse
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mycourse.databinding.ActivityMainBinding
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var viewPager: ViewPager2
 
-    private val tabTitles = intArrayOf(
-        R.string.tab_text_1,
-        R.string.tab_text_2,
-        R.string.tab_text_3
-    )
+    companion object {
+        private val TAB_TITLES = intArrayOf(
+            R.string.tab_text_1,
+            R.string.tab_text_2,
+            R.string.tab_text_3
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
 
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
-        binding.viewPager.adapter = sectionsPagerAdapter
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = resources.getString(tabTitles[position])
+        viewPager = findViewById(R.id.view_pager)
+        viewPager.adapter = sectionsPagerAdapter
+
+        val tabs: TabLayout = findViewById(R.id.tab_layout)
+        TabLayoutMediator(tabs, viewPager) { tab, position ->
+            tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
 
         supportActionBar?.elevation = 0f
@@ -41,15 +45,15 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_home -> {
-                Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show()
+                viewPager.currentItem = 0   // pindah ke HomeFragment
                 true
             }
             R.id.action_materi -> {
-                Toast.makeText(this, "Materi", Toast.LENGTH_SHORT).show()
+                viewPager.currentItem = 1   // pindah ke MateriFragment
                 true
             }
             R.id.action_quiz -> {
-                Toast.makeText(this, "Quiz", Toast.LENGTH_SHORT).show()
+                viewPager.currentItem = 2   // pindah ke QuizFragment
                 true
             }
             else -> super.onOptionsItemSelected(item)
